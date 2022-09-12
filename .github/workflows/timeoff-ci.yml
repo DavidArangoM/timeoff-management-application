@@ -23,9 +23,9 @@ jobs:
       working-directory: ./timeoff-app
       run: npm install
 
-    - name: Run tests
-      working-directory: ./timeoff-app
-      run: npm test
+    # - name: Run tests
+    #   working-directory: ./timeoff-app
+    #   run: npm test
 
     - name: Check Docker image generation
       working-directory: ./timeoff-app
