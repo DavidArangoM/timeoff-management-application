@@ -3,8 +3,6 @@ name: CD - TIMEOFF
 on:
   push:
     branches: [ "master"]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
 
@@ -36,3 +34,6 @@ jobs:
 
     - name: Push Docker image to ECR
       run: docker push 980952865757.dkr.ecr.us-west-2.amazonaws.com/gorilla-timeoff-repo:latest
+
+    - name: Deploy change - update ecs service
+      run: aws ecs update-service --cluster gorilla-timeoff-ecs-cluster --service gorilla-timeoff-service --force-new-deployment --region us-west-2
