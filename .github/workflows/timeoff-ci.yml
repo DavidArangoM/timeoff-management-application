@@ -14,10 +14,13 @@ jobs:
     - name: Pull source code
       uses: actions/checkout@v3
 
-    - name: Build app
+    - name: Setup node
       uses: actions/setup-node@v3
       with:
         node-version: 14.19.0
+    
+    - name: Build app
+      working-directory: ./timeoff-app
       run: npm install
 
     - name: Run tests
