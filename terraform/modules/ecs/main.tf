@@ -3,8 +3,17 @@ resource "aws_ecs_cluster" "gorilla_cluster" {
   tags = merge(var.tags, {Name= "${var.app_name}-ecs-cluster"})
 }
 
-resource "aws_ecr_repository" "gorilla_ecs_repository" {
-  name                  = "${var.app_name}-repo"
+resource "aws_ecr_repository" "gorilla_app_repository" {
+  name                  = "${var.app_name}-app"
+  image_tag_mutability  = "MUTABLE"
+  tags                  = merge(var.tags, {Name= "${var.app_name}-ecr"})
+  image_scanning_configuration {
+    scan_on_push = false
+  }
+}
+
+resource "aws_ecr_repository" "gorilla_nginx_repository" {
+  name                  = "${var.app_name}-nginx"
   image_tag_mutability  = "MUTABLE"
   tags                  = merge(var.tags, {Name= "${var.app_name}-ecr"})
   image_scanning_configuration {
@@ -35,14 +44,34 @@ resource "aws_ecs_task_definition" "gorilla_task" {
 
     container_definitions       = jsonencode([
         {
-            name            = "${var.app_name}-container"
-            image           = aws_ecr_repository.gorilla_ecs_repository.repository_url
+            name            = "${var.app_name}-container-app"
+            image           = aws_ecr_repository.gorilla_app_repository.repository_url
             cpu             = 500
             memory          = 1000
             essential       = true
             portMappings    = [{
                                 containerPort = 3000
                                 hostPort      = 3000
+                            }]
+            logConfiguration= {
+                logDriver       = "awslogs"
+                secretOptions   = null
+                options = {
+                    awslogs-group           = aws_cloudwatch_log_group.gorilla_clw.name,
+                    awslogs-region          = "us-west-2",
+                    awslogs-stream-prefix   = "ecs"
+                }
+            }
+        },
+        {
+            name            = "${var.app_name}-container-nginx"
+            image           = aws_ecr_repository.gorilla_nginx_repository.repository_url
+            cpu             = 500
+            memory          = 1000
+            essential       = true
+            portMappings    = [{
+                                containerPort = 80
+                                hostPort      = 80
                             }]
             logConfiguration= {
                 logDriver       = "awslogs"
@@ -82,8 +111,8 @@ resource "aws_ecs_service" "gorilla_service" {
 
     load_balancer {
       target_group_arn = "${var.target_group_arn}"
-      container_name   = "${var.app_name}-container"
-      container_port   = "3000"
+      container_name   = "${var.app_name}-container-nginx"
+      container_port   = "80"
     }
 
     network_configuration {

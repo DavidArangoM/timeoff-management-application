@@ -11,7 +11,7 @@ resource "aws_lb" "gorilla_lb" {
 
 resource "aws_lb_listener" "gorilla_lbl_1" {
   load_balancer_arn = aws_lb.gorilla_lb.arn
-  port              = "3000"
+  port              = "80"
   protocol          = "HTTP" 
 
   default_action {
@@ -20,27 +20,11 @@ resource "aws_lb_listener" "gorilla_lbl_1" {
   }
 }
 
-resource "aws_lb_listener" "gorilla_lbl_2" {
-  load_balancer_arn = aws_lb.gorilla_lb.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      port        = "3000"
-      protocol    = "HTTP"
-      status_code = "HTTP_301"
-    }
-  }
-}
-
 resource "aws_lb_target_group" "gorilla_lbtg" {
   name        = "${var.app_name}-lbtg"
   target_type = "ip"
   protocol    = "HTTP"
-  port        = "3000"  
+  port        = "80"  
   vpc_id      = var.vpc_id
   tags        = merge(var.tags, {Name= "${var.app_name}-lbtg"})
   health_check {
