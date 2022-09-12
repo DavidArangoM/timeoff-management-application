@@ -33,13 +33,17 @@ jobs:
       working-directory: ./nginx
       run: docker build . --file Dockerfile --tag gorilla-timeoff-nginx:latest
 
-    - name: Tag Docker image
+    - name: Tag Docker app image
       run: docker tag gorilla-timeoff-app:latest 980952865757.dkr.ecr.us-west-2.amazonaws.com/gorilla-timeoff-app:latest
-    - run: docker tag gorilla-timeoff-nginx:latest 980952865757.dkr.ecr.us-west-2.amazonaws.com/gorilla-timeoff-nginx:latest
+    
+    - name: Tag Docker nginx image
+      run: docker tag gorilla-timeoff-nginx:latest 980952865757.dkr.ecr.us-west-2.amazonaws.com/gorilla-timeoff-nginx:latest
 
-    - name: Push Docker image to ECR
+    - name: Push Docker app image to ECR
       run: docker push 980952865757.dkr.ecr.us-west-2.amazonaws.com/gorilla-timeoff-app:latest
-    - run: docker push 980952865757.dkr.ecr.us-west-2.amazonaws.com/gorilla-timeoff-nginx:latest
+    
+    - name: Push Docker nginx image to ECR
+      run: docker push 980952865757.dkr.ecr.us-west-2.amazonaws.com/gorilla-timeoff-nginx:latest
 
-    - name: Deploy change - update ecs service
+    - name: Deploy changes - update ecs service
       run: aws ecs update-service --cluster gorilla-timeoff-ecs-cluster --service gorilla-timeoff-service --force-new-deployment --region us-west-2

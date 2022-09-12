@@ -29,4 +29,4 @@ jobs:
 
     - name: Check Docker image generation
       working-directory: ./timeoff-app
-      run: docker build . --file Dockerfile --tag gorilla-timeoff-repo:latest
+      run: docker build . --file Dockerfile --tag gorilla-timeoff-app:latest
