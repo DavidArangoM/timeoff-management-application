@@ -14,7 +14,7 @@ Devops improvements made for gorilla's technical test
 
 ## Demo
 
-- [timeoff-app](https://timeoff.damedina.com/login/) (The app will be available one week, cost reasons :P )
+- [timeoff-app](https://timeoff.damedina.com/login/) (The app will be available for one week, for cost reasons :P )
 
 
 
