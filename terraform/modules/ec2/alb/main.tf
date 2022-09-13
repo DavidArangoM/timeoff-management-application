@@ -9,10 +9,28 @@ resource "aws_lb" "gorilla_lb" {
   tags                        = merge(var.tags, {Name= "${var.app_name}-lb"})
 }
 
-resource "aws_lb_listener" "gorilla_lbl_1" {
+resource "aws_lb_listener" "gorilla_lbl_http" {
   load_balancer_arn = aws_lb.gorilla_lb.arn
   port              = "80"
-  protocol          = "HTTP" 
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "gorilla_lbl_https" {
+  load_balancer_arn = aws_lb.gorilla_lb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = "${var.certificate}" 
 
   default_action {
     type             = "forward"

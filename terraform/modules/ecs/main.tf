@@ -31,8 +31,8 @@ resource "aws_ecs_task_definition" "gorilla_task" {
 
     family                      = "${var.app_name}-task"
     requires_compatibilities    = ["FARGATE"]
-    task_role_arn               = "arn:aws:iam::980952865757:role/ecsTaskExecutionRole"
-    execution_role_arn          = "arn:aws:iam::980952865757:role/ecsTaskExecutionRole"
+    task_role_arn               = var.task_role_arn
+    execution_role_arn          = var.task_role_arn
     network_mode                = "awsvpc"
     cpu                         = 1024
     memory                      = 2048

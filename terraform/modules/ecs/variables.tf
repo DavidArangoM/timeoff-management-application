@@ -6,6 +6,10 @@ variable "target_group_arn" {
     description = "Load balancer target group arn"
 }
 
+variable "task_role_arn" {
+    description = "Task role arn"
+}
+
 variable "subnets" {
     description = "The vpc subnets"
     type = list(string)

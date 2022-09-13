@@ -19,3 +19,7 @@ variable "security_groups" {
     description = "The vpc security group"
     type = list(string)
 }
+
+variable "certificate" {
+    description = "Certificate arn"
+}

@@ -9,11 +9,18 @@ module "vpc" {
 module "alb" {
   source          = "../modules/ec2/alb"
   app_name        = "${var.app_name}"
+  certificate     = var.certificate
   vpc_id          = module.vpc.out_vpc
   subnets         = module.vpc.out_subnets
   security_groups = [module.vpc.out_sg]
   tags            = var.tags
   depends_on      = [module.vpc]   
+}
+
+module "iam" {
+  source    = "../modules/iam"
+  app_name  = "${var.app_name}"
+  tags      = var.tags
 }
 
 module "ecs" {
@@ -22,8 +29,9 @@ module "ecs" {
   subnets         = module.vpc.out_subnets
   security_groups = [module.vpc.out_sg]
   target_group_arn= module.alb.out_lbtg_arn
+  task_role_arn   = module.iam.out_task_role_arn
   tags            = var.tags
-  depends_on      = [module.alb] 
+  depends_on      = [module.alb, module.iam] 
 }
 
 #Init Terraform configuration-----------------------------------------------------------

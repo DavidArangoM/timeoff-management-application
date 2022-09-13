@@ -6,6 +6,10 @@ variable "region" {
     description = "App name"
 }
 
+variable "certificate" {
+    description = "Certificate arn"
+}
+
 variable "tags" {
     type = map(string)
 }
