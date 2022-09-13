@@ -44,7 +44,7 @@ Devops improvements made for gorilla's technical test
 
 ## Architecture
 
-![TimeOff.Management Screenshot](https://raw.githubusercontent.com/timeoff-management/application/master/public/img/gorilla-architecture.png)
+![TimeOff.Management Screenshot](./timeoff-app/public/img/gorilla-architecture.png)
 
 ## Authors
 
